@@ -45,7 +45,7 @@ $(document).ready(function() {
     success: function(res) {
       var data = res.data;
       for (var i = 0; i < 10; i++) {
-        var gist = $('<script src="https://gist.github.com/satomacoto/' + data[i].id + '.js"></script>');
+        var gist = $('<script />').attr('src', 'https://gist.github.com/satomacoto/' + data[i].id + '.js');
         $('#gists').append(gist);
       }
     }
