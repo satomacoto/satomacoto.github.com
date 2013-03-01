@@ -40,15 +40,16 @@
           <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
           <script>
 $(document).ready(function() {
+  // http://developer.github.com/v3
   $.ajax({
     type: 'GET',
-    url: 'https://api.github.com/users/satomacoto/gists?callback=?',
+    url: 'https://api.github.com/users/satomacoto/gists?page=1&per_page=10&callback=?',
     dataType: 'jsonp',
     success: function(res) {
       var data = res.data;
       for (var i = 0; i < data.length; i++) {
         //var gist = '<script src="https://gist.github.com/satomacoto/' + data[i].id + '.js"><\/script>';
-        var url = "http://gist.github.com/" + data[i].id;
+        var url = data[i].html_url;
         var description = data[i].description;
         if (description == "") description = url;
         var gist = '<li><a href="' + url + '">' + description.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') + '</a></li>';
