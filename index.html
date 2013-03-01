@@ -29,14 +29,14 @@
         <hr>
 
         <section id="main_content">
-          <h3>Hello world</h3>
+          <h3>Hello world!</h3>
 
 <p>Hello world!</p>
 
           <h3>Gists</h3>
           <ol id="gists">
           </ol>
-          <p><a href="http://gist.github.com/satomacoto">Other gists...</a></p>
+          <p><a href="http://gist.github.com/satomacoto">More gists...</a></p>
           <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
           <script>
 $(document).ready(function() {
@@ -46,13 +46,14 @@ $(document).ready(function() {
     url: 'https://api.github.com/users/satomacoto/gists?page=1&per_page=10&callback=?',
     dataType: 'jsonp',
     success: function(res) {
+      //console.log(res);
       var data = res.data;
       for (var i = 0; i < data.length; i++) {
-        //var gist = '<script src="https://gist.github.com/satomacoto/' + data[i].id + '.js"><\/script>';
         var url = data[i].html_url;
         var description = data[i].description;
         if (description == "") description = url;
         var gist = '<li><a href="' + url + '">' + description.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') + '</a></li>';
+//        var gist = '<script src="https://gist.github.com/satomacoto/' + data[i].id + '.js"><\/script>';
         $('#gists').append(gist);
       }
     }
