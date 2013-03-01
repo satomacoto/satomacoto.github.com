@@ -34,8 +34,10 @@
 <p>Hello world!</p>
 
           <h3>Gists</h3>
-          <div id="gists"></div>
-          <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+          <ol id="gists">
+          </ol>
+          <p><a href="http://gist.github.com/satomacoto">Other gists...</a></p>
+          <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
           <script>
 $(document).ready(function() {
   $.ajax({
@@ -44,8 +46,12 @@ $(document).ready(function() {
     dataType: 'jsonp',
     success: function(res) {
       var data = res.data;
-      for (var i = 0; i < 10; i++) {
-        var gist = $('<script />').attr('src', 'https://gist.github.com/satomacoto/' + data[i].id + '.js');
+      for (var i = 0; i < data.length; i++) {
+        //var gist = '<script src="https://gist.github.com/satomacoto/' + data[i].id + '.js"><\/script>';
+        var url = "http://gist.github.com/" + data[i].id;
+        var description = data[i].description;
+        if (description == "") description = url;
+        var gist = '<li><a href="' + url + '">' + description.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') + '</a></li>';
         $('#gists').append(gist);
       }
     }
