@@ -10,6 +10,9 @@
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js"></script>
+
     <title>satomacoto.github.com by satomacoto</title>
   </head>
 
@@ -31,33 +34,65 @@
         <section id="main_content">
           <h3>Hello world!</h3>
 
-<p>Hello world!</p>
+          <p>Hello world!</p>
 
           <h3>Gists</h3>
-          <ol id="gists">
-          </ol>
+          <ul id="gists"></ul>
+          <p id="links">
+            <a id="first">first</a>
+            <a id="prev">prev</a>
+            <a id="next">next</a>
+            <a id="last">last</a>
+          </p>
           <p><a href="http://gist.github.com/satomacoto">More gists...</a></p>
-          <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+
+          <h3>MathJax</h3>
+
+          <p><a href="mathjax.html">Editor</a>
           <script>
 $(document).ready(function() {
   // http://developer.github.com/v3
-  $.ajax({
-    type: 'GET',
-    url: 'https://api.github.com/users/satomacoto/gists?page=1&per_page=10&callback=?',
-    dataType: 'jsonp',
-    success: function(res) {
-      //console.log(res);
-      var data = res.data;
-      for (var i = 0; i < data.length; i++) {
-        var url = data[i].html_url;
-        var description = data[i].description;
-        if (description == "") description = url;
-        var gist = '<li><a href="' + url + '">' + description.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') + '</a></li>';
-//        var gist = '<script src="https://gist.github.com/satomacoto/' + data[i].id + '.js"><\/script>';
-        $('#gists').append(gist);
-      }
+  function appendData(data) {
+    for (var i = 0; i < data.length; i++) {
+      var url = data[i].html_url;
+      var description = data[i].description;
+      if (description == "") description = url;
+      var gist = '<li><a href="' + url + '">' + description.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') + '</a></li>';
+      // var gist = '<script src="https://gist.github.com/satomacoto/' + data[i].id + '.js"><\/script>';
+      $('#gists').append(gist);
     }
-  });
+  }
+  function appendLinks(links) {
+    $('#links > a').each(function() { $(this).removeAttr('href', ''); });
+    for (var i = 0; i < links.length; i++) {
+      $('#' + links[i][1].rel)
+        .attr('href', links[i][0])
+        .click(function() {
+          appendGists($(this).attr('href'));
+          return false;
+        });
+    }    
+  }
+  function appendGists(url) {
+    $('#gists').hide('slide');          
+    $('#gists').empty();
+    $.ajax({
+      type: 'GET',
+      url: url + '&callback=?',
+      dataType: 'jsonp',
+      success: function(res) {
+        console.log(res);
+        var links = res.meta.Link;
+        appendLinks(links);
+        var data = res.data;
+        appendData(data);
+      },
+      complete: function(res) {
+        $('#gists').show('slide');
+      }
+    });
+  }
+  appendGists('https://api.github.com/users/satomacoto/gists?page=1&per_page=10');
 });
           </script>
         </section>
