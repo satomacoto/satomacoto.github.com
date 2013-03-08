@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<!-- http://docs.mathjax.org/en/v1.1-latest/typeset.html -->
+<html>
+<head>
+<meta charset="utf-8">
+<title>MathJax Dynamic Math Test Page</title>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [["$","$"],["\\(","\\)"]]
+    }
+  });
+</script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+<style type="text/css">
+textarea {
+  width: 100%;
+}
+.sample:hover {
+  background-color: #ccc;
+  cursor: pointer;
+}
+.sample {
+  float: left;
+}
+</style>
+</head>
+<body>
+
+<script>
+
+$(document).ready(function () {
+  //
+  //  Use a closure to hide the local variables from the
+  //  global namespace
+  //
+  var QUEUE = MathJax.Hub.queue;  // shorthand for the queue
+  var math = null;                // the element jax for the math output.
+
+  //
+  //  Get the element jax when MathJax has produced it.
+  //
+  QUEUE.Push(function () {
+    math = MathJax.Hub.getAllJax("MathOutput")[0];
+  });
+
+  //
+  //  The onchange event handler that typesets the
+  //  math entered by the user
+  //
+  UpdateMath = function (TeX) {
+    QUEUE.Push(["Text",math,"\\displaystyle{"+TeX+"}"]);
+  }
+
+  $(window).click(function() {
+    $("#MathInput").focus();
+  });
+
+  $('.sample').click(function() {
+    $('#MathInput').insertAtCaret($('script', this).text() + " ");
+    UpdateMath($('#MathInput').val());
+  });
+
+  $('#MathInput').keyup(function() {UpdateMath($(this).val())});
+});
+
+jQuery.fn.extend({
+insertAtCaret: function(myValue){
+  return this.each(function(i) {
+    if (document.selection) {
+      //For browsers like Internet Explorer
+      this.focus();
+      sel = document.selection.createRange();
+      sel.text = myValue;
+      this.focus();
+    }
+    else if (this.selectionStart || this.selectionStart == '0') {
+      //For browsers like Firefox and Webkit based
+      var startPos = this.selectionStart;
+      var endPos = this.selectionEnd;
+      var scrollTop = this.scrollTop;
+      this.value = this.value.substring(0, startPos)+myValue+this.value.substring(endPos,this.value.length);
+      this.focus();
+      this.selectionStart = startPos + myValue.length;
+      this.selectionEnd = startPos + myValue.length;
+      this.scrollTop = scrollTop;
+    } else {
+      this.value += myValue;
+      this.focus();
+    }
+  })
+}
+});
+</script>
+
+<div>
+  <div>Type some TeX code:</div>
+  <div>
+    <textarea id="MathInput" rows="10"></textarea>
+  </div>
+
+  <div id="MathOutput">
+    <div>You typed:</div>
+    <div>$${}$$</div>
+  </div>
+
+  <div>
+    <div class="panel">
+    <span class="sample">$\hbar$</span>
+    <span class="sample">$\imath$</span>
+    <span class="sample">$\jmath$</span>
+    <span class="sample">$\ell$</span>
+    <span class="sample">$\Re$</span>
+    <span class="sample">$\Im$</span>
+    <span class="sample">$\emptyset$</span>
+    <span class="sample">$\infty$</span>
+    <span class="sample">$\partial$</span>
+    <span class="sample">$\nabla$</span>
+    <span class="sample">$\triangle$</span>
+
+    <span class="sample">$\forall$</span>
+    <span class="sample">$\exists$</span>
+    <span class="sample">$\nexists$</span>
+    <span class="sample">$\top$</span>
+    <span class="sample">$\bot$</span>
+    <span class="sample">$\sum$</span>
+    <span class="sample">$\prod$</span>
+    <span class="sample">$\int$</span>
+    <span class="sample">$\oint$</span>
+
+    <span class="sample">$\bigcap$</span>
+    <span class="sample">$\bigcup$</span>
+    <span class="sample">$\biguplus$</span>
+    <span class="sample">$\bigoplus$</span>
+    <span class="sample">$\bigotimes$</span>
+    <span class="sample">$\bigodot$</span>
+    <span class="sample">$\mathbf{R}$</span>
+    <span class="sample">$\mathcal{R}$</span>
+    <span class="sample">$\mathbb{R}$</span>
+    <span class="sample">$\mathrm{R}$</span>
+    <span class="sample">$^{sup}$</span>
+
+    <span class="sample">$\widetilde{abc}$</span>
+    <span class="sample">$\underbrace{abc}$</span>
+    <span class="sample">$\widehat{abc}$</span>
+    <span class="sample">$\underline{abc}$</span>
+    <span class="sample">$\overrightarrow{abc}$</span>
+    <span class="sample">$\sqrt{abc}$</span>
+    <span class="sample">$\sqrt[n]{abc}$</span>
+    <span class="sample">$\overline{abc}$</span>
+    <span class="sample">$\overbrace{abc}$</span>
+    <span class="sample">$\frac{abc}{xyz}$</span>
+    <span class="sample">$_{sub}$</span>
+
+    <span class="sample">$\hat{a}$</span>
+    <span class="sample">$\check{a}$</span>
+    <span class="sample">$\breve{a}$</span>
+    <span class="sample">$\acute{a}$</span>
+    <span class="sample">$\grave{a}$</span>
+    <span class="sample">$\tilde{a}$</span>
+    <span class="sample">$\bar{a}$</span>
+    <span class="sample">$\vec{a}$</span>
+    <span class="sample">$\dot{a}$</span>
+    <span class="sample">$\ddot{a}$</span>
+    <span class="sample">$a^{\prime}$</span>
+    </div>
+
+    <div class="panel">
+    <span class="sample">$\alpha$</span>
+    <span class="sample">$\beta$</span>
+    <span class="sample">$\gamma$</span>
+    <span class="sample">$\delta$</span>
+    <span class="sample">$\epsilon$</span>
+    <span class="sample">$\varepsilon$</span>
+    <span class="sample">$\zeta$</span>
+    <span class="sample">$\eta$</span>
+    <span class="sample">$\theta$</span>
+    <span class="sample">$\vartheta$</span>
+    <span class="sample">$\iota$</span>
+
+    <span class="sample">$\kappa$</span>
+    <span class="sample">$\lambda$</span>
+    <span class="sample">$\mu$</span>
+    <span class="sample">$\nu$</span>
+    <span class="sample">$\xi$</span>
+    <span class="sample">$o$</span>
+    <span class="sample">$\pi$</span>
+    <span class="sample">$\varpi$</span>
+    <span class="sample">$\rho$</span>
+    <span class="sample">$\varrho$</span>
+    <span class="sample">$\sigma$</span>
+
+    <span class="sample">$\varsigma$</span>
+    <span class="sample">$\tau$</span>
+    <span class="sample">$\upsilon$</span>
+    <span class="sample">$\phi$</span>
+    <span class="sample">$\varphi$</span>
+    <span class="sample">$\chi$</span>
+    <span class="sample">$\psi$</span>
+    <span class="sample">$\omega$</span>
+
+    <span class="sample">$\Gamma$</span>
+    <span class="sample">$\Delta$</span>
+    <span class="sample">$\Theta$</span>
+    <span class="sample">$\Lambda$</span>
+    <span class="sample">$\Xi$</span>
+    <span class="sample">$\Pi$</span>
+    <span class="sample">$\Sigma$</span>
+    <span class="sample">$\Upsilon$</span>
+    <span class="sample">$\Phi$</span>
+    <span class="sample">$\Psi$</span>
+    <span class="sample">$\Omega$</span>
+    </div>
+
+    <div class="panel">
+    <span class="sample">$\{$</span>
+    <span class="sample">$\big\{$</span>
+    <span class="sample">$\Big\{$</span>
+    <span class="sample">$\bigg\{$</span>
+    <span class="sample">$\Bigg\{$</span>
+    <span class="sample">$\}$</span>
+    <span class="sample">$\left[\right]$</span>
+    <span class="sample">$|$</span>
+    <span class="sample">$\|$</span>
+    <span class="sample">$\cdots$</span>
+
+    <span class="sample">$\subset$</span>
+    <span class="sample">$\supset$</span>
+    <span class="sample">$\subseteq$</span>
+    <span class="sample">$\supseteq$</span>
+    <span class="sample">$\in$</span>
+    <span class="sample">$\ni$</span>
+    <span class="sample">$\sim$</span>
+    <span class="sample">$\simeq$</span>
+    <span class="sample">$\approx$</span>
+    <span class="sample">$\cong$</span>
+    <span class="sample">$\vdots$</span>
+
+    <span class="sample">$\propto$</span>
+    <span class="sample">$\pm$</span>
+    <span class="sample">$\mp$</span>
+    <span class="sample">$\times$</span>
+    <span class="sample">$\div$</span>
+    <span class="sample">$\ast$</span>
+    <span class="sample">$\star$</span>
+    <span class="sample">$\circ$</span>
+    <span class="sample">$\bullet$</span>
+    <span class="sample">$\cdot$</span>
+    <span class="sample">$\ddots$</span>
+
+    <span class="sample">$\cap$</span>
+    <span class="sample">$\cup$</span>
+    <span class="sample">$\uplus$</span>
+    <span class="sample">$\bigtriangleup$</span>
+    <span class="sample">$\bigtriangledown$</span>
+    <span class="sample">$\oplus$</span>
+    <span class="sample">$\otimes$</span>
+    <span class="sample">$\odot$</span>
+    <span class="sample">$\neq$</span>
+    <span class="sample">$\dagger$</span>
+    <span class="sample">$\ngeqslant$</span>
+
+    <span class="sample">$\leqslant$</span>
+    <span class="sample">$\geqslant$</span>
+    <span class="sample">$\ll$</span>
+    <span class="sample">$\gg$</span>
+    <span class="sample">$\lll$</span>
+    <span class="sample">$\ggg$</span>
+    <span class="sample">$\lesssim$</span>
+    <span class="sample">$\gtrsim$</span>
+    <span class="sample">$\nless$</span>
+    <span class="sample">$\ngtr$</span>
+    <span class="sample">$\nleqslant$</span>
+    </div>
+
+    <div class="panel">
+    <span class="sample">$\cos$</span>
+    <span class="sample">$\sin$</span>
+    <span class="sample">$\tan$</span>
+    <span class="sample">$\cosh$</span>
+    <span class="sample">$\sinh$</span>
+    <span class="sample">$\tanh$</span>
+
+    <span class="sample">$\inf$</span>
+    <span class="sample">$\sup$</span>
+    <span class="sample">$\cot$</span>
+    <span class="sample">$\min$</span>
+    <span class="sample">$\max$</span>
+    <span class="sample">$\coth$</span>
+
+    <span class="sample">$\exp$</span>
+    <span class="sample">$\ln$</span>
+    <span class="sample">$\log$</span>
+    <span class="sample">$\arg$</span>
+    <span class="sample">$\ker$</span>
+    <span class="sample">$\sec$</span>
+
+    <span class="sample">$\gcd$</span>
+    <span class="sample">$\dim$</span>
+    <span class="sample">$\det$</span>
+    <span class="sample">$\hom$</span>
+    <span class="sample">$\csc$</span>
+    <span class="sample">$\lg$</span>
+
+    <span class="sample">$\arccos$</span>
+    <span class="sample">$\arcsin$</span>
+    <span class="sample">$\arctan$</span>
+    <span class="sample">$\lim$</span>
+    <span class="sample">$\liminf$</span>
+    <span class="sample">$\limsup$</span>
+    </div>
+
+    <div>
+      <span class="sample">$\begin{aligned}
+\dot{x} & = \sigma(y-x) \\
+\dot{y} & = \rho x - y - xz \\
+\dot{z} & = -\beta z + xy
+\end{aligned}$</span>
+      <span class="sample">$\left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)$</span>
+      <span class="sample">$\mathbf{V}_1 \times \mathbf{V}_2 =  \begin{vmatrix}
+\mathbf{i} & \mathbf{j} & \mathbf{k} \\
+\frac{\partial X}{\partial u} &  \frac{\partial Y}{\partial u} & 0 \\
+\frac{\partial X}{\partial v} &  \frac{\partial Y}{\partial v} & 0
+\end{vmatrix}$</span>
+      <span class="sample">$\frac{1}{\Bigl(\sqrt{\phi \sqrt{5}}-\phi\Bigr) e^{\frac25 \pi}} =
+1+\frac{e^{-2\pi}} {1+\frac{e^{-4\pi}} {1+\frac{e^{-6\pi}}
+{1+\frac{e^{-8\pi}} {1+\ldots} } } }$</span>
+      <span class="sample">$1 +  \frac{q^2}{(1-q)}+\frac{q^6}{(1-q)(1-q^2)}+\cdots =
+\prod_{j=0}^{\infty}\frac{1}{(1-q^{5j+2})(1-q^{5j+3})},
+\quad\quad \text{for $|q|<1$}.$</span>
+      <span class="sample">$\begin{aligned}
+\nabla \times \vec{\mathbf{B}} -\, \frac1c\, \frac{\partial\vec{\mathbf{E}}}{\partial t} & = \frac{4\pi}{c}\vec{\mathbf{j}} \\   \nabla \cdot \vec{\mathbf{E}} & = 4 \pi \rho \\
+\nabla \times \vec{\mathbf{E}}\, +\, \frac1c\, \frac{\partial\vec{\mathbf{B}}}{\partial t} & = \vec{\mathbf{0}} \\
+\nabla \cdot \vec{\mathbf{B}} & = 0 \end{aligned}$</span>
+      <span class="sample">$$</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>
